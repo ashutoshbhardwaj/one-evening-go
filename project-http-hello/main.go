@@ -15,5 +15,9 @@ func main() {
 func handleEnpoint (w http.ResponseWriter, r *http.Request) {
 	// do what you want to do 
 	name := r.URL.Query().Get("name")
+	if name == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	fmt.Fprint(w, "Hello, ", name)
 }
