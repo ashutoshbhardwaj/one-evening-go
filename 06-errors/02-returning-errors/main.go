@@ -22,4 +22,6 @@ func Divide(x float64, y float64) (float64, error){
 		if y == 0 {
 			return 0, errors.New("Divs")
 		} 
+	
 		return x / y, nil 
+}
