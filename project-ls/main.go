@@ -4,6 +4,7 @@ import (
 	"os"
 	"strings"
 	"fmt"
+	"log"
 )
 
 func main() {
@@ -15,7 +16,10 @@ func main() {
 func listFiles(dirname string) []string {
 	var dirs []string
 
-	files, _ := os.ReadDir(dirname)
+	files, err := os.ReadDir(dirname)
+	if err != nil {
+		log.Fatal(err)
+	}
 	for _, f := range files {
 		dirs = append(dirs, f.Name())
 	}
