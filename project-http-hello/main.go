@@ -5,6 +5,9 @@ import (
 	"net/http"
 	"log"
 )
+var calls []string
+
+var stats = map[string]int{}
 func main() {
 	http.HandleFunc("/hello", handleEnpoint)
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -19,5 +22,10 @@ func handleEnpoint (w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	calls = append(calls, name)
+	stats[name]++
+	fmt.Printf("calls: %#v\n", calls)
+	fmt.Printf("stats: %#v\n", stats)
 	fmt.Fprint(w, "Hello, ", name)
+
 }
