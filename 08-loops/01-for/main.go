@@ -3,6 +3,11 @@ package main
 import "fmt"
 
 func Alphabet(length int) []string {
+	var s []string
+	for i:=0; i < length; i++ {
+		s = append(s,characterByIndex(i))
+	}
+	return s
 }
 
 func main() {
