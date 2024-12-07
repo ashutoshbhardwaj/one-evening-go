@@ -10,6 +10,20 @@ var products = map[int]string{
 	5: "Training",
 }
 
+func Keys(products map[int]string) []int {
+	var keys []int
+	for key, _ := range products {
+		keys = append(keys, key  )
+	}
+	return keys	
+}
+func Values(products map[int]string) []string {
+	var values []string
+	for _, value := range products {
+		values = append(values, value  )
+	}
+	return values
+}
 func main() {
 	ids := Keys(products)
 	names := Values(products)
