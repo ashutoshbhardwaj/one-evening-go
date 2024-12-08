@@ -8,14 +8,17 @@ func main() {
 		Length: 5,
 	}
 
-	area := Area(rect)
+	area := rect.Area()
+
 	fmt.Println("Area:", area)
 }
 
-func Area(r Rectangle) int {
-	return r.Width * r.Length
-}
+
 type Rectangle struct {
 	Width  int
 	Length int
+}
+
+func (r Rectangle) Area() int {
+	return r.Width * r.Length
 }
