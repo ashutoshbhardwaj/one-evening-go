@@ -2,19 +2,20 @@ package main
 
 import (
 	"os"
-	"strings"
 	"fmt"
 	"log"
 )
 
 func main() {
 	files := listFiles("testdata")
-	fmt.Println(strings.Join(files," "))
+	for _, file := range files {
+		fmt.Println(file)
+	}
 
 }
 
 func listFiles(dirname string) []string {
-	var dirs []string
+	dirs := []string{}
 
 	files, err := os.ReadDir(dirname)
 	if err != nil {
@@ -23,6 +24,8 @@ func listFiles(dirname string) []string {
 	for _, f := range files {
 		dirs = append(dirs, f.Name())
 	}
-
+	// fmt.Println("--")
+	// fmt.Println(dirs)
+	// fmt.Println("--")
 	return dirs
 }
