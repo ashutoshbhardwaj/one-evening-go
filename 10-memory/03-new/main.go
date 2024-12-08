@@ -2,8 +2,15 @@ package main
 
 import "fmt"
 
+var count int
+
 func AllocateBuffer() *string {
+	count++
+	if count <= 3 {
+		return new(string)
+	}
 	return nil
+
 }
 
 func main() {
