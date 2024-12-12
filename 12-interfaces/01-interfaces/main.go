@@ -4,7 +4,7 @@ type User struct {
 	Name string
 }
 
-func NewUser(name string, storage MapStorage) User {
+func NewUser(name string, storage Storage) User {
 	user := User{Name: name}
 	storage.Store(user)
 	return User{}
@@ -24,6 +24,10 @@ type SliceStorage struct {
 
 func (s SliceStorage) Store(user User) {
 	s.users = append(s.users, user)
+}
+
+type Storage interface {
+	Store(user User) 
 }
 
 func main() {
