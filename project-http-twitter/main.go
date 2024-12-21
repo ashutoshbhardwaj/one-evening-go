@@ -1,47 +1,3 @@
-// package main
-
-// import (
-// 	"fmt"
-// 	"net/http"
-// 	"log"
-// 	"encoding/json"
-// 	"io"
-// )
-
-// type userPayload struct {
-// 	Message  string `json:"message"`
-// 	Location   string    `json:"location"`
-// }
-
-// func main() {
-// 	http.HandleFunc("/tweets", tweetHandle)
-// 	log.Fatal(http.ListenAndServe(":8080", nil))
-// }
-
-// func tweetHandle(w http.ResponseWriter, r *http.Request) {
-// 	body, err := io.ReadAll(r.Body)
-// 	if err != nil {
-// 		log.Println("Failed to read body: %s", err)
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		return
-// 	}
-// 	defer r.Body.Close() 
-
-// 	u := userPayload{}
-
-// 	if err := json.Unmarshal(body, &u); err != nil {
-// 		log.Println("Failed to unmarshal payload: %s", err)
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		return
-// 	}
-// 	if u.Message == "" {
-// 		w.WriteHeader(http.StatusBadRequest)
-// 		return
-// 	}
-// 	fmt.Printf("Tweet: `%s` from %s\n", u.Message, u.Location)
-// }
-
-//
 package main
 
 import (
@@ -53,7 +9,10 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/tweets", addTweet)
+	s := server{
+		TweetRepository: &TweetMemoryRepositry{},
+	}
+	http.HandleFunc("/tweets", s.addTweet)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
@@ -65,9 +24,27 @@ type tweet struct {
 type response struct {
 	ID int `json:"ID"`
 }
-var count = 0
 
-func addTweet(w http.ResponseWriter, r *http.Request) {
+type TweetRepository interface {
+	AddTweet(tw tweet) (int) 
+}
+
+type TweetMemoryRepositry struct {
+	Tweets []tweet
+}
+
+func (tmr *TweetMemoryRepositry) AddTweet(tw tweet) (int) {
+	tmr.Tweets = append(tmr.Tweets, tw)
+	return len(tmr.Tweets)
+
+}
+// var count = 0
+
+type server struct {
+	TweetRepository TweetRepository
+}
+
+func (s *server) addTweet(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		log.Printf("Failed to read body: %s", err)
@@ -90,9 +67,11 @@ func addTweet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Printf("Tweet: `%s` from %s\n", tw.Message, tw.Location)
-	count ++ 
+	// count ++ 
+	id := s.TweetRepository.AddTweet(tw)
+	
 	resp := response{
-		ID: count,
+		ID: id,
 	}
 	responsePayload, err := json.Marshal(resp)
 	if err != nil {
